@@ -4,7 +4,6 @@ using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Capabilities;
 using CounterStrikeSharp.API.Modules.Memory.DynamicFunctions;
 using CounterStrikeSharp.API.Modules.Utils;
-using MenuManager;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json.Linq;
 
@@ -163,9 +162,6 @@ public partial class WeaponPaints
 	private static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
 	private readonly ConcurrentDictionary<int, ConcurrentDictionary<int, float>> _temporaryPlayerWeaponWear = new();
-	
-	internal static IMenuApi? MenuApi;
-	private static readonly PluginCapability<IMenuApi> MenuCapability = new("menu:nfcore");
 	
 	private int _fadeSeed;
 

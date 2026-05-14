@@ -13,6 +13,7 @@
     <PackageReference Include="Dapper" Version="2.1.72" />
     <PackageReference Include="MySqlConnector" Version="2.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.5-beta1" />
+    <PackageReference Include="CS2MenuManager" Version="1.0.41" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,11 +22,5 @@
 
   <ItemGroup>
     <None Update="gamedata\*.*" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="MenuManagerApi">
-      <HintPath>3rd_party\MenuManagerApi.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>

@@ -39,7 +39,7 @@ internal class WeaponSynchronization
 		catch (Exception ex)
 		{
 			// Log the exception or handle it appropriately
-			Console.WriteLine($"An error occurred: {ex.Message}");
+			Utility.Log($"An error occurred: {ex.Message}");
 		}
 	}
 

@@ -1,10 +1,6 @@
-using System.Runtime.InteropServices;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Core.Attributes;
-using CounterStrikeSharp.API.Core.Attributes.Registration;
-using CounterStrikeSharp.API.Modules.Commands;
-using CounterStrikeSharp.API.Modules.Entities.Constants;
 using Microsoft.Extensions.Logging;
 using MySqlConnector;
 
@@ -17,19 +13,14 @@ public partial class WeaponPaints : BasePlugin, IPluginConfig<WeaponPaintsConfig
 
 	public WeaponPaintsConfig Config { get; set; } = new();
     private static WeaponPaintsConfig _config { get; set; } = new();
-    public override string ModuleAuthor => "Nereziel & daffyy";
+
+    public override string ModuleName => "WeaponPaints";
+    public override string ModuleAuthor => "Nereziel & daffyy, continued by exkludera";
 	public override string ModuleDescription => "Skin, gloves, agents and knife selector, standalone and web-based";
-	public override string ModuleName => "WeaponPaints";
-	public override string ModuleVersion => "3.3a";
+	public override string ModuleVersion => "3.3.1";
 
 	public override void Load(bool hotReload)
-	{
-		// Hardcoded hotfix needs to be changed later (Not needed 17.09.2025)
-		//if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-		//	Patch.PerformPatch("0F 85 ? ? ? ? 31 C0 B9 ? ? ? ? BA ? ? ? ? 66 0F EF C0 31 F6 31 FF 48 C7 45 ? ? ? ? ? 48 C7 45 ? ? ? ? ? 48 C7 45 ? ? ? ? ? 48 C7 45 ? ? ? ? ? 0F 29 45 ? 48 C7 45 ? ? ? ? ? C7 45 ? ? ? ? ? 66 89 45 ? E8 ? ? ? ? 41 89 C5 85 C0 0F 8E", "90 90 90 90 90 90");
-		//else
-		//	Patch.PerformPatch("74 ? 48 8D 0D ? ? ? ? FF 15 ? ? ? ? EB ? BA", "EB");
-		
+	{		
 		Instance = this;
 
 		if (hotReload)
@@ -86,13 +77,6 @@ public partial class WeaponPaints : BasePlugin, IPluginConfig<WeaponPaintsConfig
 			Unload(false);
 			return;
 		}
-
-		if (!File.Exists(Path.GetDirectoryName(Path.GetDirectoryName(ModuleDirectory)) + "/gamedata/weaponpaints.json"))
-		{
-			Logger.LogError("You need to upload \"weaponpaints.json\" to \"gamedata directory\"!");
-			Unload(false);
-			return;
-		}
 		
 		var builder = new MySqlConnectionStringBuilder
 		{
@@ -111,16 +95,12 @@ public partial class WeaponPaints : BasePlugin, IPluginConfig<WeaponPaintsConfig
 		_localizer = Localizer;
 
 		Utility.Config = config;
-		Utility.ShowAd(ModuleVersion);
-		Task.Run(async () => await Utility.CheckVersion(ModuleVersion, Logger));
 	}
 
 	public override void OnAllPluginsLoaded(bool hotReload)
 	{
 		try
 		{
-			MenuApi = MenuCapability.Get();
-			
 			if (Config.Additional.KnifeEnabled)
 				SetupKnifeMenu();
 			if (Config.Additional.SkinEnabled)
@@ -136,10 +116,9 @@ public partial class WeaponPaints : BasePlugin, IPluginConfig<WeaponPaintsConfig
 		
 			RegisterCommands();
 		}
-		catch (Exception)
+		catch (Exception ex)
 		{
-			MenuApi = null;
-			Logger.LogError("Error while loading required plugins");
+			Logger.LogError("Error while loading required plugins: " + ex.Message);
 			throw;
 		}
 	}

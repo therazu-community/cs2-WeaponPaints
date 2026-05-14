@@ -56,40 +56,6 @@ namespace WeaponPaints
 			List<JObject> skinInfo;
 			bool isLegacyModel;
 
-			if (_config.Additional.GiveRandomSkin &&
-			    !HasChangedPaint(player, weaponDefIndex, out _))
-			{
-				// Random skins
-				weapon.FallbackPaintKit = GetRandomPaint(weaponDefIndex);
-				weapon.FallbackSeed = 0;
-				weapon.FallbackWear = 0.01f;
-			
-				weapon.AttributeManager.Item.NetworkedDynamicAttributes.Attributes.RemoveAll();
-				CAttributeListSetOrAddAttributeValueByName.Invoke(weapon.AttributeManager.Item.NetworkedDynamicAttributes.Handle, "set item texture prefab", GetRandomPaint(weaponDefIndex));
-				CAttributeListSetOrAddAttributeValueByName.Invoke(weapon.AttributeManager.Item.NetworkedDynamicAttributes.Handle, "set item texture seed", 0);
-				CAttributeListSetOrAddAttributeValueByName.Invoke(weapon.AttributeManager.Item.NetworkedDynamicAttributes.Handle, "set item texture wear", 0.01f);
-			
-				weapon.AttributeManager.Item.AttributeList.Attributes.RemoveAll();
-				CAttributeListSetOrAddAttributeValueByName.Invoke(weapon.AttributeManager.Item.AttributeList.Handle, "set item texture prefab", GetRandomPaint(weaponDefIndex));
-				CAttributeListSetOrAddAttributeValueByName.Invoke(weapon.AttributeManager.Item.AttributeList.Handle, "set item texture seed", 0);
-				CAttributeListSetOrAddAttributeValueByName.Invoke(weapon.AttributeManager.Item.AttributeList.Handle, "set item texture wear", 0.01f);
-			
-				fallbackPaintKit = weapon.FallbackPaintKit;
-			
-				if (fallbackPaintKit == 0)
-					return;
-			
-				skinInfo = SkinsList
-					.Where(w => 
-						w["weapon_defindex"]?.ToObject<int>() == weaponDefIndex && 
-						w["paint"]?.ToObject<int>() == fallbackPaintKit)
-					.ToList();
-				
-				isLegacyModel = skinInfo.Count <= 0 || skinInfo[0].Value<bool>("legacy_model");
-				UpdatePlayerWeaponMeshGroupMask(player, weapon, isLegacyModel);
-				return;
-			}
-
 			if (!HasChangedPaint(player, weaponDefIndex, out var weaponInfo) || weaponInfo == null)
 				return;
 
